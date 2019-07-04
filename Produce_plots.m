@@ -298,7 +298,7 @@ ylim([0.0,110])
 %legend(h, legend_labels, 'Location', 'southeast','FontSize', 10, 'Interpreter', 'latex')
 %}
 
-%% Q_max for prescribed (V/V_0)_max (Figure 11)
+%% Q_max for prescribed V_max (Figure 11)
 %{
 
 plot_concs = 1; % Change to one to plot concentrations
