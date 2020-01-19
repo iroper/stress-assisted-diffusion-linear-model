@@ -1,4 +1,4 @@
-function c0 = calculate_optimal_c0_stress(R, mu_SF_1, mu_SF_2, sigma_max, options, c0_init, plot_option)
+function c0 = calculate_optimal_c0_stress(R, mu_SF_1, mu_SF_2, sigma_max, options, c0_init, varargin)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Function to calculate the state of charge which results in an effective 
@@ -12,19 +12,28 @@ function c0 = calculate_optimal_c0_stress(R, mu_SF_1, mu_SF_2, sigma_max, option
 %             chemical potential of the core material
 % mu_SF_2   : Interpolation function of the nondimensional stress-free
 %             chemical potential of the shell material
-% sigma_max : The maximum effective stress at r=R permitted in the 
-%             optimisation
+% sigma_max : The maximum effective stress at r=R permitted
 % options   : Solver options
-% c0_init   : Initial guess for the state of charge
+% c0_init   : Initial guess for the optimal state of charge
+% varargin  : If plot_option is specified, this determines whether the
+%             objective function is plotted
 %
 % Outputs
 % -------
-% c0 : The state of charge which induce an expansion of Vmax in the hybrid
-%      particle
+% c0 : The state of charge which induce an effective stress of sigma_max in
+%      the hybrid particle
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% If no plot_option provided, assume 0
+switch nargin
+    case 6
+        plot_option = 0;
+    case 7
+        plot_option = varargin{1};
+end
+
 optim_func = @(c0) sigma_max_obj_func(c0, R, mu_SF_1, mu_SF_2, sigma_max, options);
-if plot_option == 1 % Plot the solve_fun
+if plot_option == 1 % Plot the optim_func
     plot_wide(0.0,1.0,optim_func)
 end
 [c0, ~] = special_solve_sigma_eff_max(optim_func, c0_init, 0.0, 1.0, options, plot_option);
@@ -46,8 +55,7 @@ function res = sigma_max_obj_func(c0, R, mu_SF_1, mu_SF_2, sigma_max, options)
 %                chemical potential of the core material
 % mu_SF_2      : Interpolation function of the nondimensional stress-free
 %                chemical potential of the shell material
-% sigma_max    : The maximum volumetric expansion permitted in the 
-%                optimisation
+% sigma_max    : The maximum volumetric expansion permitted
 % options      : Solver options
 %
 % Outputs
@@ -73,7 +81,7 @@ end
 % Calculate G2 for these concentrations
 [~, ~, ~, G2] = calc_mechanical_constants(c1, c2);
 % Calculate von Mises stress
-sigma_eff = (6.*G2*eta_1*Vm_1*c_max_1*dim_G_1*1E-9*abs(B_2))/(R^3); %GPa
+sigma_eff = (6.*G2*eta_1*Vm_1*c_max_1*dim_G_1*1E-9*abs(B_2))/(R^3); %GPa (Eq. 56)
 % Calculate residual
 res = sigma_eff - sigma_max;
 end
@@ -140,6 +148,7 @@ function [output, error] = special_solve_sigma_eff_max(solve_fun, c0_init, lb, u
         pause 
     end
 end
+
 function output = check_error(lb, ub, output, error, optim_fun, options)
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Function for finding out why the solution found using SOLVE is
@@ -188,9 +197,11 @@ function output = check_error(lb, ub, output, error, optim_fun, options)
             output = 'There is no solution';
         end
 end
+
 function plot_wide(lb,ub,solve_fun)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Plots the function we are trying to solve for all possible values
+    % Plots the function we are trying to solve for all possible values.
+    % Includes a zoomed in plot as well to find the root.
     % 
     % Inputs
     % ------
@@ -217,10 +228,12 @@ function plot_wide(lb,ub,solve_fun)
     ylim([-0.5,0.5])
     xlim([lb,ub])
 end
+
 function plot_narrow(output, solve_fun)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Plots the function we are trying to solve for a narrow range of
-    % values around the already calculated solution
+    % values around the already calculated solution. Includes a zoomed in
+    % plot as well.
     % 
     % Inputs
     % ------
@@ -241,10 +254,11 @@ function plot_narrow(output, solve_fun)
     plot(x_range,y_range) % Plot
     ylim([-0.5,0.5])
 end
+
 function plot_squared(lb,ub,solve_fun)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Plots the square of the function we are trying to solve for all
-    % possible values of the concentration
+    % possible values of the concentration. Includes a zoomed-in plot.
     % 
     % Inputs
     % ------
@@ -268,6 +282,7 @@ function plot_squared(lb,ub,solve_fun)
     plot(x_range,y_range) % Plot
     ylim([-0.5,0.5])
 end
+
 function [x, k] = hard_bisection(func, lb, ub)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Calculates the root to the function to solve using the bisection
@@ -287,13 +302,14 @@ function [x, k] = hard_bisection(func, lb, ub)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     k = 0;
-    while abs(ub-lb) > eps*abs(ub)
-        x = (lb + ub)/2;
-        if sign(func(x)) == sign(func(ub))
-            ub = x;
-        else
+    while abs(ub-lb) > eps*abs(ub) % While the interval is wider than specified
+        x = (lb + ub)/2; % test the middle of the interval
+        if sign(func(x)) == sign(func(ub)) 
+            % If the function at x is the same sign as the function at the upper bound of the interval
+            ub = x; % Change upper bound to the midpoint and look in the left half of the interval
+        else % Otherwise, look in the right half of the interval
             lb = x;
         end
-        k = k + 1;
+        k = k + 1; % Increase iteration count
     end
 end

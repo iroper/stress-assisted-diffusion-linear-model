@@ -45,5 +45,5 @@ OCV_2(:,1) = (OCV_2(:,1)-min(OCV_2(:,1)))/(max(OCV_2(:,1)) - min(OCV_2(:,1)));
 
 % Define non-dimensional stress-free chemical potential interpolation
 % functions
-mu_SF_1 = @(x) interp1(OCV_1(:,1), OCV_1(:,2)*((-fund_charge)/(R_g*T)), x, 'linear'); % Eq. 20
-mu_SF_2 = @(x) interp1(OCV_2(:,1), OCV_2(:,2)*((-fund_charge)/(R_g*T)), x, 'linear'); % Eq. 20
+mu_SF_1 = @(x) interp1(OCV_1(:,1), OCV_1(:,2)*((-fund_charge)/(R_g*T)), x, 'linear'); % Eq.s 18 & 20
+mu_SF_2 = @(x) interp1(OCV_2(:,1), OCV_2(:,2)*((-fund_charge)/(R_g*T)), x, 'linear'); % Eq.s 18 & 20

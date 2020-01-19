@@ -1,4 +1,4 @@
-function [c1, c2, potential] = SAD_core_shell_conc_calc_special(R, c0, mu_SF_1, mu_SF_2, options, plot_option)
+function [c1, c2, potential] = SAD_core_shell_conc_calc_special(R, c0, mu_SF_1, mu_SF_2, options, varargin)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Takes the size of the core, the stress-free chemical potentials of each 
@@ -32,6 +32,14 @@ function [c1, c2, potential] = SAD_core_shell_conc_calc_special(R, c0, mu_SF_1, 
 global c_max_1 gamma_1 Sd_1
 global c_max_2 gamma_2 Sd_2
 global c_ratio
+
+% If no plot_option provided, assume 0
+switch nargin
+    case 5
+        plot_option = 0;
+    case 6
+        plot_option = varargin{1};
+end
 
 % Calculate bounds to ensure c1 and c2 are between 0 and 1
 lb = max(0,(((1.-c0)*c_max_1*R^3)/(c_max_2*(R^3-1))) + c0); % Eq. 48
@@ -81,10 +89,10 @@ end
         %                   particular value of c2
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         global Sd_1 Sd_2 gamma_1 gamma_2 c_ratio
-        c1 = c0 + c_ratio*(1-R^(-3))*(c2 - c0); % compute temporary value of c_Si in function evaluation
+        c1 = c0 + c_ratio*(1-R^(-3))*(c2 - c0); % compute temporary value of c_Si in function evaluation (Eq. 47)
         % Find the mechanical parameters at the trial concentrations
         [lam1, lam2, G1, G2] = calc_mechanical_constants(c1, c2);
-        solve_func_eval = mu_SF_1(c1) - mu_SF_2(c2) - Sd_1*3.*(3.*lam1 + 2.*G1)*(A_1(c1,c2,R) - gamma_1*c1) + Sd_2*3.*(3.*lam2 + 2.*G2)*(A_2(c1,c2,R) - gamma_2*c2);
+        solve_func_eval = mu_SF_1(c1) - mu_SF_2(c2) - Sd_1*3.*(3.*lam1 + 2.*G1)*(A_1(c1,c2,R) - gamma_1*c1) + Sd_2*3.*(3.*lam2 + 2.*G2)*(A_2(c1,c2,R) - gamma_2*c2); % Eq. 35
     end
 
     function [output, error] = special_solve(solve_fun, lb, ub, options, plot_option)

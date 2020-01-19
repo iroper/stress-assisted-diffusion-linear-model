@@ -8,8 +8,8 @@ function constants
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 global fund_charge R_g T
-global x_max_1 Jc_SF_1 Vm_1 dim_lam_1 dim_G_1 dim_yield_stress_1 nu_1 E0_1 etaE_1 eta_1 c_max_1 gamma_1 yield_stress_1 Sd_1
-global x_max_2 Jc_SF_2 Vm_2 dim_lam_2 dim_G_2 dim_yield_stress_2 nu_2 E0_2 etaE_2 eta_2 c_max_2 gamma_2 yield_stress_2 Sd_2
+global x_max_1 Jc_SF_1 Vm_1 dim_lam0_1 dim_G0_1 nu_1 E0_1 etaE_1 eta_1 c_max_1 gamma_1 Sd_1
+global x_max_2 Jc_SF_2 Vm_2 dim_lam0_2 dim_G0_2 nu_2 E0_2 etaE_2 eta_2 c_max_2 gamma_2 Sd_2
 global c_ratio
 
 %% General Constants
@@ -28,11 +28,10 @@ etaE_1 = -0.15278; % Rate which core material's Young's modulus changes per stat
 
 eta_1 = (Jc_SF_1 - 1)/(3.*x_max_1); % Coefficient of Compositional Expansion
 c_max_1 = x_max_1/Vm_1; % Maximum concentration in mol m^{-3}
-%dim_lam_1 = ((E0_1*nu_1)/((1.+nu_1)*(1.-2.*nu_1))); % Dimensional Lame parameter at c=0 in Pa
-dim_G_1 = (E0_1/(2.*(1.+nu_1))); % Dimensional Shear Modulus at c=0 in Pa
+dim_lam0_1 = ((E0_1*nu_1)/((1.+nu_1)*(1.-2.*nu_1))); % Dimensional Lame parameter at c=0 in Pa
+dim_G0_1 = (E0_1/(2.*(1.+nu_1))); % Dimensional Shear Modulus at c=0 in Pa
 gamma_1 = 1.; % Non-dimensional concentration pre-factor
-%yield_stress_1 = dim_yield_stress_1/(dim_G_1*eta_1*x_max_1); % Non-dimensional yield stress
-Sd_1 = (eta_1^2*Vm_1^2*c_max_1*dim_G_1)/(R_g*T); % Stress-assisted diffusion parameter
+Sd_1 = (eta_1^2*Vm_1^2*c_max_1*dim_G0_1)/(R_g*T); % Stress-assisted diffusion parameter
 %}
 %% Graphite Constants
 %%{
@@ -45,11 +44,10 @@ etaE_2 = 14.4375; % Rate which Young's modulus changes per state of charge
 
 eta_2 = (Jc_SF_2 - 1)/(3.*x_max_2); % Coefficient of Compositional Expansion
 c_max_2 = x_max_2/Vm_2; % Maximum concentration in mol m^{-3}
-%dim_lam_2 = ((E0_2*nu_2)/((1.+nu_2)*(1.-2.*nu_2))); % Dimensional Lame parameter at c=0 in Pa
-%dim_G_2 = (E0_2/(2.*(1.+nu_2))); % Dimensional Shear Modulus at c=0 in Pa
+dim_lam0_2 = ((E0_2*nu_2)/((1.+nu_2)*(1.-2.*nu_2))); % Dimensional Lame parameter at c=0 in Pa
+dim_G0_2 = (E0_2/(2.*(1.+nu_2))); % Dimensional Shear Modulus at c=0 in Pa
 gamma_2 = (eta_2*Vm_2*c_max_2)/(eta_1*Vm_1*c_max_1); % Non-dimensional concentration pre-factor
-%yield_stress_2 = dim_yield_stress_2/(dim_G_1*eta_1*x_max_1); % Non-dimensional yield stress
-Sd_2 = (eta_2*eta_1*Vm_2*Vm_1*c_max_1*dim_G_1)/(R_g*T); % Stress-assisted diffusion parameter
+Sd_2 = (eta_2*eta_1*Vm_2*Vm_1*c_max_1*dim_G0_1)/(R_g*T); % Stress-assisted diffusion parameter
 %}
 
 %% Multi-material constants

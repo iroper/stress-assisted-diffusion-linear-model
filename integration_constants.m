@@ -11,8 +11,8 @@ function [A_1, A_2, B_2] = integration_constants(R, c1, c2)
 % Inputs
 % ------
 % R  : Nondimensional radius of the core (R_1/R_2)
-% c1 : Concentration in the core
-% c2 : Concentration in the shell
+% c1 : Lithium concentration in the core
+% c2 : Lithium concentration in the shell
 
 % Outputs
 % -------
