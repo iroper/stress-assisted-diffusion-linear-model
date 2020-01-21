@@ -32,7 +32,7 @@ shell_OCV_data = 'Graphite_points_interp.mat';
 [OCV_1, OCV_2, mu_SF_1, mu_SF_2] = load_OCV_curves(core_OCV_data, shell_OCV_data);
 
 %% Chemical potentials of individual materials (Figure 2)
-%%{
+%{
 figure(20)
 conc_range = linspace(0.0,1.0,1000); % Define conentration range and discretise
 plot(conc_range, mu_SF_1(conc_range))
@@ -45,7 +45,7 @@ legend({core_material, shell_material}, 'Location', 'East','FontSize', 12, 'Inte
 %}
 
 %% Concentrations, trace and potentials (Figures 3-5)
-%%{
+%{
 % Choose volume of cores
 V1_vector = [0.05, 0.1, 0.25, 0.5];
 % Choose min/max c_0 values and discretisation
@@ -133,7 +133,7 @@ legend(legend_labels, 'Location', 'Northwest','FontSize', 14, 'Interpreter', 'la
 %}
 
 %% Concentration and potentials without stress-assisted diffusion (Figures 6 & 7)
-%%{
+%{
 % Choose volume of cores
 V1_vector = [0.05, 0.1, 0.25, 0.5];
 % Choose min/max c_0 values and discretisation
@@ -197,7 +197,7 @@ ylim([-20,0]) % For aesthetics
 %}
 
 %% V, Q/V and sigma_eff (Figures 8-10)
-%%{
+%{
 % Choose min/max c_0 and V1 values and quantity of values used
 c0_min = 0.1;
 c0_max = 0.9;
@@ -308,7 +308,7 @@ ylim([0.0,165])
 %}
 
 %% Q_max for prescribed V_max (Figure 11)
-%%{
+%{
 % Choose V_max values to test
 V_max_vector = [1.2, 1.4, 1.6, 1.8];
 % Choose range of core volumes to optimise over
@@ -426,7 +426,7 @@ end
 %}
 
 %% Q_max for prescribed maximum stress (Figures 12-13)
-%{
+%%{
 % N.B. the optimisation for maximum stress constraints is reasonably
 % computationally expensive, so has a long run-time.
 

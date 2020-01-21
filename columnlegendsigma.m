@@ -38,7 +38,7 @@ function [legend_h,object_h,plot_h,text_strings] = columnlegendsigma(numcolumns,
 
 location = 'NorthEast';
 boxon = false; legend_h = false; padding = 0; extravars = [];
-for i=1:2:length(varargin),
+for i=1:2:length(varargin)
     switch lower(varargin{i})
         case 'location'
             location = varargin{i+1};
@@ -62,9 +62,9 @@ for i=1:2:length(varargin),
     end
 end
 
-if legend_h == false,
+if legend_h == false
     %create the legend
-    if ~isempty(extravars),
+    if ~isempty(extravars)
         [legend_h,object_h,plot_h,text_strings] = legend(str, extravars{:});
     else
         [legend_h,object_h,plot_h,text_strings] = legend(str);

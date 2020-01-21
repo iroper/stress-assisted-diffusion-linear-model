@@ -64,7 +64,7 @@ function res = sigma_max_obj_func(c0, R, mu_SF_1, mu_SF_2, sigma_max, options)
 %       sigma_max
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-global Vm_1 eta_1 c_max_1 dim_G_1
+global Vm_1 eta_1 c_max_1 dim_G0_1
 
 % SAD_core_shell_conc_calc will not work for c_0 not in [0.0,1.0]
 if c0 > 1.0
@@ -81,7 +81,7 @@ end
 % Calculate G2 for these concentrations
 [~, ~, ~, G2] = calc_mechanical_constants(c1, c2);
 % Calculate von Mises stress
-sigma_eff = (6.*G2*eta_1*Vm_1*c_max_1*dim_G_1*1E-9*abs(B_2))/(R^3); %GPa (Eq. 56)
+sigma_eff = (6.*G2*eta_1*Vm_1*c_max_1*dim_G0_1*1E-9*abs(B_2))/(R^3); %GPa (Eq. 56)
 % Calculate residual
 res = sigma_eff - sigma_max;
 end
